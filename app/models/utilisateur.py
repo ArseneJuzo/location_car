@@ -26,17 +26,16 @@ class Utilisateur(Base):
 
     reservation = relationship('Reservation', back_populates='utilisateur')
     avis = relationship('Avis', back_populates='utilisateur')
-    
+    agences_gerees = relationship('Agence', back_populates='responsable')
+
 
     @validates('email')
-    def valider_champ(self, key, email):
-        if key == 'email':
-            assert "@" in email, "adresse email invalide"
-        return email      
-
+    def valider_email(self, key, email):
+        assert "@" in email, "adresse email invalide"
+        return email
 
     @validates('telephone')
-    def valider_champ(self, key, telephone):
-        if key == 'telephone':
+    def valider_telephone(self, key, telephone):
+        if telephone is not None:
             assert telephone.lstrip("+").isdigit(), "numero de telephone incorrect"
-        return telephone                                    
+        return telephone

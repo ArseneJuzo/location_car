@@ -1,22 +1,45 @@
-from pydantic import BaseModel, EmailStr
-from typing import optional
+from pydantic import BaseModel, EmailStr, ConfigDict
+from datetime import datetime
+from typing import Optional
 
 
 class AgenceBase(BaseModel):
-    nom: str
-    ville: str
-    pays: str
-    telephone: int
-    email: EmailStr
+    nom_agence: str
+    adresse: str
+    ville: Optional[str] = None
+    pays: Optional[str] = None
+    telephone: Optional[str] = None
+    email: Optional[EmailStr] = None
+
+    model_config = ConfigDict(from_attributes=True)
+
 
 class AgenceCreate(AgenceBase):
-    mot_de_passe: str
+    latitude: Optional[float] = None
+    longitude: Optional[float] = None
+    responsable_id: Optional[int] = None
 
-class AgenceUpdate(AgenceBase):
-    mot_de_passe:optional[str] = none
+
+class AgenceUpdate(BaseModel):
+    nom_agence: Optional[str] = None
+    adresse: Optional[str] = None
+    ville: Optional[str] = None
+    pays: Optional[str] = None
+    telephone: Optional[str] = None
+    email: Optional[EmailStr] = None
+    latitude: Optional[float] = None
+    longitude: Optional[float] = None
+
 
 class AgenceRead(AgenceBase):
     id: int
-
-class config:
-    orm_mode = True    
+    latitude: Optional[float] = None
+    longitude: Optional[float] = None
+    notes: Optional[float] = None
+    total_avis: Optional[int] = None
+    nombre_vehicule_disponibles: int
+    nombre_vehicule_total: int
+    nombre_reservation: int
+    responsable_id: Optional[int] = None
+    date_creation: datetime
+    distance_km: Optional[float] = None

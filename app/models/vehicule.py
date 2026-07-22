@@ -9,6 +9,12 @@ class StatutVehicule(Enum):
     en_location = "en_location"
     maintenance = "maintenance"
 
+class CategorieLocation(Enum):
+    economique = "economique"
+    compacte = "compacte"
+    suv = "suv"
+    luxe = "luxe"   
+
 class Vehicule(Base):
     __tablename__ = "vehicule"
 
@@ -18,6 +24,7 @@ class Vehicule(Base):
     immatriculation = Column(String(255), unique=True, nullable=False)
     prix_journalier = Column(Float, nullable=False)
     carburant = Column(String(50))
+    categorie = Column(SQLEnum(CategorieLocation, name="categorie_location_enum"))
     nombres_places = Column(Integer)
     boite_vitesse = Column(String(50))
     statut = Column(SQLEnum(StatutVehicule, name="statut_vehicule_enum"), default=StatutVehicule.disponible)
