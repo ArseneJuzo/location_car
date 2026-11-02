@@ -50,7 +50,24 @@ def get_all_vehicules(
 
 def update_vehicule(db: Session, vehicule_id: int, vehicule_update: vehicule_schemas.VehiculeUpdate):
     db_vehicule = get_vehicule(db, vehicule_id)
-    for key, value in vehicule_update.dict(exclude_unset=True).items():
+    update_data = vehicule_update.dict(exclude_unset=True)
+
+    nouveau_statut = update_data.get("statut")
+    if nouveau_statut is not None and nouveau_statut != db_vehicule.statut:
+        # en_location est piloté uniquement par le cycle de vie des réservations
+        if StatutVehicule.en_location in (nouveau_statut, db_vehicule.statut):
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="le statut en_location est géré par les réservations (confirmer / terminer / annuler)",
+            )
+        agence = db.query(models.Agence).filter(models.Agence.id == db_vehicule.agence_id).first()
+        if agence:
+            if nouveau_statut == StatutVehicule.disponible:
+                agence.nombre_vehicule_disponibles = (agence.nombre_vehicule_disponibles or 0) + 1
+            else:
+                agence.nombre_vehicule_disponibles = max((agence.nombre_vehicule_disponibles or 1) - 1, 0)
+
+    for key, value in update_data.items():
         setattr(db_vehicule, key, value)
 
     db.commit()
