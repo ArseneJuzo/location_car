@@ -13,10 +13,14 @@ API REST FastAPI pour une plateforme de location de voitures opérant au Camerou
 
 ## Installation
 
-```bash
-python3 -m venv venv
-venv/bin/python -m pip install -r requirements.txt
+Sous Windows (PowerShell), avec Python 3.12 :
+
+```powershell
+py -3.12 -m venv venv
+venv\Scripts\python -m pip install -r requirements.txt
 ```
+
+Sous Linux/macOS, remplacer `venv\Scripts\python` par `venv/bin/python` dans toutes les commandes. Un venv n'est pas portable d'un système à l'autre : le recréer s'il a été créé sur un autre OS.
 
 Copier `.env` (déjà présent) et vérifier les variables :
 
@@ -37,16 +41,16 @@ openssl rsa -in private.pem -pubout -out public.pem
 
 ## Base de données
 
-```bash
-venv/bin/python -m alembic upgrade head
+```powershell
+venv\Scripts\python -m alembic upgrade head
 ```
 
 ## Lancer l'API
 
-```bash
-venv/bin/python run.py
+```powershell
+venv\Scripts\python run.py
 # ou
-venv/bin/python -m uvicorn app.main:app --reload
+venv\Scripts\python -m uvicorn app.main:app --reload
 ```
 
 Documentation interactive : http://127.0.0.1:8000/docs (Swagger) ou http://127.0.0.1:8000/redoc.
@@ -55,8 +59,8 @@ Documentation interactive : http://127.0.0.1:8000/docs (Swagger) ou http://127.0
 
 Un script idempotent peuple la base avec des agences, véhicules et utilisateurs réalistes situés à Douala, Yaoundé, Bafoussam et Garoua :
 
-```bash
-venv/bin/python -m scripts.seed_data
+```powershell
+venv\Scripts\python -m scripts.seed_data
 ```
 
 Il peut être relancé sans risque de doublons. Mot de passe commun à tous les comptes créés : **`Cameroun@2024`**.
